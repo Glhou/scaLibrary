@@ -1,0 +1,13 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    network_mode: bridge
+  cassandra:
+    image: cassandra
+    network_mode: bridge
