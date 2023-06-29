@@ -1,13 +1,17 @@
-version: "3"
+version: "3.5"
 services:
   mysql:
     image: mysql
+    container_name: "mysql-1"
     environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: db
       MYSQL_USER: mysql
       MYSQL_PASSWORD: mysql
-    network_mode: bridge
+    ports:
+      - "3306:3306"
   cassandra:
     image: cassandra
-    network_mode: bridge
+    container_name: "cassandra-1"
+    ports:
+      - "9042:9042"

@@ -1,0 +1,31 @@
+{
+  "user.users": {
+    "transaction": true,
+    "partition-key": [
+      "user_id"
+    ],
+    "columns": {
+      "user_id": "INT",
+      "name": "TEXT",
+      "document_limit": "INT",
+      "document_total": "INT"
+    }
+  },
+  "document.documents": {
+    "transaction": true,
+    "partition-key": [
+      "user_id"
+    ],
+    "clustering-key": [
+      "timestamp"
+    ],
+    "secondary-index": [
+      "order_id"
+    ],
+    "columns": {
+      "order_id": "TEXT",
+      "customer_id": "INT",
+      "timestamp": "BIGINT"
+    }
+  }
+}
