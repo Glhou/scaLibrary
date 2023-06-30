@@ -15,6 +15,7 @@ repositories {
 mainClassName = "scalibrary.AppMain"
 
 dependencies {
+    implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.scalar-labs:scalardb:3.9.0'
     implementation 'org.slf4j:slf4j-simple:1.7.30'
 }
