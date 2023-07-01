@@ -17,7 +17,6 @@ import java.util.List;
 
 
 public class DataLoader implements AutoCloseable{
-  private final TransactionFactory factory;
   private final DistributedTransactionManager manager;
   private final Faker faker;
 
@@ -33,7 +32,7 @@ public class DataLoader implements AutoCloseable{
 
   
   public DataLoader() throws IOException{
-    factory = TransactionFactory.create("scalardb.properties");
+    TransactionFactory factory = TransactionFactory.create("scalardb.properties");
     manager = factory.getTransactionManager();
     faker = new Faker();
   }
