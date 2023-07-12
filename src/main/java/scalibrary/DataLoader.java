@@ -14,6 +14,9 @@ import java.util.Optional;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Random;
 
 
 public class DataLoader implements AutoCloseable{
@@ -72,13 +75,20 @@ public class DataLoader implements AutoCloseable{
       int number_users = 100;
       int number_documents = 1000;
       transaction = manager.start();
-      // Loading Users
-      for (int i = 0; i < number_users; i++) {
-        loadUserIfNotExists(transaction, i, faker.name().fullName(), i % locations.size(), 10, 0);
-      }
+      Map<Integer,Integer> user_not_null_ids = new HashMap<>();
       // Loading Documents
       for (int i = 0; i < number_documents; i++) {
-        loadDocumentIfNotExists(transaction, i, faker.book().title(), faker.book().author(), i % number_users, i % types.size(), i % statuses.size(), i % locations.size());
+        Integer user_id = -1;
+        Random r = new Random();
+        if (r.nextInt(3) != 0){
+          user_id = i % number_users;
+          user_not_null_ids.put(user_id,user_not_null_ids.getOrDefault(user_id, 0));
+        }
+        loadDocumentIfNotExists(transaction, i, faker.book().title(), faker.book().author(), user_id, i % types.size(), i % statuses.size(), i % locations.size());
+      }
+      // Loading Users
+      for (int i = 0; i < number_users; i++) {
+        loadUserIfNotExists(transaction, i, faker.name().fullName(), i % locations.size(), 100, user_not_null_ids.get(i));
       }
       transaction.commit();
     }catch (TransactionException e){

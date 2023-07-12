@@ -18,7 +18,8 @@
       "document_id"
     ],
     "secondary-index": [
-      "user_id"
+      "user_id",
+      "location_id"
     ],
     "columns": {
       "document_id": "INT",
@@ -60,5 +61,4 @@
       "name": "TEXT"
     }
   }
-
 }
