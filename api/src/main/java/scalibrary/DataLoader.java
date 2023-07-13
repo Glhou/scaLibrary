@@ -18,23 +18,18 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
 
-
-public class DataLoader implements AutoCloseable{
+public class DataLoader implements AutoCloseable {
   private final DistributedTransactionManager manager;
   private final Faker faker;
 
   private List<String> locations = Arrays.asList(
-    "Hiyoshi", "Yagami", "Mita", "SFC"
-  );
+      "Hiyoshi", "Yagami", "Mita", "SFC");
   private List<String> types = Arrays.asList(
-    "Book", "Magazine", "Newspaper", "Journal"
-  );
+      "Book", "Magazine", "Newspaper", "Journal");
   private List<String> statuses = Arrays.asList(
-    "Available", "Borrowed"
-  );
+      "Available", "Borrowed");
 
-  
-  public DataLoader() throws IOException{
+  public DataLoader() throws IOException {
     TransactionFactory factory = TransactionFactory.create("scalardb.properties");
     manager = factory.getTransactionManager();
     faker = new Faker();
@@ -46,22 +41,22 @@ public class DataLoader implements AutoCloseable{
 
   public void loadInitialData() throws TransactionException {
     DistributedTransaction transaction = null;
-    try{
+    try {
       transaction = manager.start();
       // Loading Locations
-      for(int i = 0; i < locations.size(); i++){
+      for (int i = 0; i < locations.size(); i++) {
         loadLocationIfNotExists(transaction, i, locations.get(i));
       }
       // Loading Types
-      for(int i = 0; i < types.size(); i++){
+      for (int i = 0; i < types.size(); i++) {
         loadTypeIfNotExists(transaction, i, types.get(i));
       }
       // Loading Statuses
-      for(int i = 0; i < statuses.size(); i++){
+      for (int i = 0; i < statuses.size(); i++) {
         loadStatusIfNotExists(transaction, i, statuses.get(i));
       }
       transaction.commit();
-    }catch (TransactionException e){
+    } catch (TransactionException e) {
       if (transaction != null) {
         transaction.abort();
       }
@@ -69,29 +64,31 @@ public class DataLoader implements AutoCloseable{
     }
   }
 
-  public void loadFixtureData() throws TransactionException{
+  public void loadFixtureData() throws TransactionException {
     DistributedTransaction transaction = null;
-    try{
+    try {
       int number_users = 100;
       int number_documents = 1000;
       transaction = manager.start();
-      Map<Integer,Integer> user_not_null_ids = new HashMap<>();
+      Map<Integer, Integer> user_not_null_ids = new HashMap<>();
       // Loading Documents
       for (int i = 0; i < number_documents; i++) {
         Integer user_id = -1;
         Random r = new Random();
-        if (r.nextInt(3) != 0){
+        if (r.nextInt(3) != 0) {
           user_id = i % number_users;
-          user_not_null_ids.put(user_id,user_not_null_ids.getOrDefault(user_id, 0));
+          user_not_null_ids.put(user_id, user_not_null_ids.getOrDefault(user_id, 0));
         }
-        loadDocumentIfNotExists(transaction, i, faker.book().title(), faker.book().author(), user_id, i % types.size(), i % statuses.size(), i % locations.size());
+        loadDocumentIfNotExists(transaction, i, faker.book().title(), faker.book().author(), user_id, i % types.size(),
+            i % statuses.size(), i % locations.size());
       }
       // Loading Users
       for (int i = 0; i < number_users; i++) {
-        loadUserIfNotExists(transaction, i, faker.name().fullName(), i % locations.size(), 100, user_not_null_ids.get(i));
+        loadUserIfNotExists(transaction, i, faker.name().fullName(), i % locations.size(), 100,
+            user_not_null_ids.get(i));
       }
       transaction.commit();
-    }catch (TransactionException e){
+    } catch (TransactionException e) {
       if (transaction != null) {
         transaction.abort();
       }
@@ -100,14 +97,13 @@ public class DataLoader implements AutoCloseable{
   }
 
   private void loadUserIfNotExists(
-    DistributedTransaction transaction,
-    int user_id,
-    String name,
-    int location_id,
-    int document_limit,
-    int document_total
-      )
-    throws TransactionException{
+      DistributedTransaction transaction,
+      int user_id,
+      String name,
+      int location_id,
+      int document_limit,
+      int document_total)
+      throws TransactionException {
     Optional<Result> user = transaction.get(
         Get.newBuilder()
             .namespace("user")
@@ -129,16 +125,15 @@ public class DataLoader implements AutoCloseable{
   }
 
   private void loadDocumentIfNotExists(
-    DistributedTransaction transaction,
-    int document_id,
-    String name,
-    String author,
-    int user_id,
-    int type_id,
-    int status_id,
-    int location_id
-      )
-    throws TransactionException{
+      DistributedTransaction transaction,
+      int document_id,
+      String name,
+      String author,
+      int user_id,
+      int type_id,
+      int status_id,
+      int location_id)
+      throws TransactionException {
     Optional<Result> document = transaction.get(
         Get.newBuilder()
             .namespace("document")
@@ -161,13 +156,11 @@ public class DataLoader implements AutoCloseable{
     }
   }
 
-
   private void loadLocationIfNotExists(
-    DistributedTransaction transaction,
-    int location_id,
-    String name
-      )
-    throws TransactionException{
+      DistributedTransaction transaction,
+      int location_id,
+      String name)
+      throws TransactionException {
     Optional<Result> location = transaction.get(
         Get.newBuilder()
             .namespace("document")
@@ -186,10 +179,9 @@ public class DataLoader implements AutoCloseable{
   }
 
   private void loadTypeIfNotExists(
-    DistributedTransaction transaction,
-    int type_id,
-    String name
-      )throws TransactionException{
+      DistributedTransaction transaction,
+      int type_id,
+      String name) throws TransactionException {
     Optional<Result> type = transaction.get(
         Get.newBuilder()
             .namespace("document")
@@ -208,10 +200,9 @@ public class DataLoader implements AutoCloseable{
   }
 
   private void loadStatusIfNotExists(
-    DistributedTransaction transaction,
-    int status_id,
-    String name
-    ) throws TransactionException{
+      DistributedTransaction transaction,
+      int status_id,
+      String name) throws TransactionException {
     Optional<Result> status = transaction.get(
         Get.newBuilder()
             .namespace("document")

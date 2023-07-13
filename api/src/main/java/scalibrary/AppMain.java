@@ -8,24 +8,26 @@ import org.slf4j.LoggerFactory;
 import com.scalar.db.api.DistributedTransactionManager;
 import com.scalar.db.exception.transaction.TransactionException;
 
-import io.javalin.Javalin; 
-
-import scalibrary.Repository.UserRepository;
-import scalibrary.Controller.DocumentController;
-import scalibrary.Controller.UserController;
+import io.javalin.Javalin;
+import scalibrary.Controller.DocsController;
 import scalibrary.Repository.DocumentRepository;
-import scalibrary.Controller.LocationController;
 import scalibrary.Repository.LocationRepository;
-import scalibrary.Controller.StatusController;
 import scalibrary.Repository.StatusRepository;
-import scalibrary.Controller.TypeController;
 import scalibrary.Repository.TypeRepository;
+import scalibrary.Repository.UserRepository;
 
+import scalibrary.Controller.DocsController;
+import scalibrary.Controller.DocumentController;
+import scalibrary.Controller.LocationController;
+import scalibrary.Controller.StatusController;
+import scalibrary.Controller.TypeController;
+import scalibrary.Controller.UserController;
 
 public class AppMain {
   private static Logger logger = LoggerFactory.getLogger(AppMain.class);
+
   public static void main(String[] args) {
-    try(DataLoader loader = new DataLoader()){
+    try (DataLoader loader = new DataLoader()) {
       DistributedTransactionManager manager = loader.getManager();
       // Loading the fake data
       try {
@@ -34,7 +36,7 @@ public class AppMain {
       } catch (TransactionException e) {
         logger.error("Data loading has failed", e);
       }
-      try{
+      try {
         // Creating repository instance
         DocumentRepository documentRepository = new DocumentRepository();
         UserRepository userRepository = new UserRepository();
@@ -44,25 +46,32 @@ public class AppMain {
         // Creating the server with javalin
         Javalin app = Javalin.create(config -> {
           config.plugins.enableDevLogging();
-          })
-          .get("/", ctx -> ctx.json("{\"status\": \"Server On\"}"))
-          .get("/document/{id}",ctx -> DocumentController.getDocument(ctx,documentRepository))
-          .post("/document",ctx -> DocumentController.createDocument(ctx, documentRepository))
-          .post("/document/{id}/loan", ctx -> DocumentController.loanDocument(ctx, documentRepository))
-          .post("/document/{id}/return",ctx -> DocumentController.returnDocument(ctx, documentRepository))
-          .get("/document/location/{id}",ctx -> DocumentController.getDocumentByLocation(ctx, documentRepository))
-          .post("/user",ctx -> UserController.createUser(ctx, userRepository))
-          .get("/user/{id}", ctx -> UserController.getUser(ctx,userRepository))
-          .post("/user/{id}/location",ctx -> UserController.editUserLocation(ctx, userRepository))
-          .get("/user/{id}/documents",ctx -> UserController.getLoanedDocument(ctx, userRepository))
-          .get("/location/{id}", ctx -> LocationController.getLocation(ctx, locationRepository))
-          .get("/type/{id}", ctx -> TypeController.getType(ctx, typeRepository))
-          .get("/status/{id}", ctx -> StatusController.getStatus(ctx, statusRepository))
-          .start(7000);  
-      }catch(IOException e){
+        })
+            .get("/", ctx -> ctx.json("{\"status\": \"Server On\"}"))
+            .get("/document", ctx -> DocumentController.getAll(ctx, documentRepository))
+            .get("/document/{id}", ctx -> DocumentController.getDocument(ctx, documentRepository))
+            .get("/document/name/{name}", ctx -> DocumentController.getDocumentByName(ctx, documentRepository))
+            .post("/document", ctx -> DocumentController.createDocument(ctx, documentRepository))
+            .post("/document/{id}/loan", ctx -> DocumentController.loanDocument(ctx, documentRepository))
+            .post("/document/{id}/return", ctx -> DocumentController.returnDocument(ctx, documentRepository))
+            .get("/document/location/{id}", ctx -> DocumentController.getDocumentByLocation(ctx, documentRepository))
+            .get("/user", ctx -> UserController.getAll(ctx, userRepository))
+            .post("/user", ctx -> UserController.createUser(ctx, userRepository))
+            .get("/user/{id}", ctx -> UserController.getUser(ctx, userRepository))
+            .post("/user/{id}/location", ctx -> UserController.editUserLocation(ctx, userRepository))
+            .get("/user/{id}/documents", ctx -> UserController.getLoanedDocument(ctx, userRepository))
+            .get("/location", ctx -> LocationController.getAll(ctx, locationRepository))
+            .get("/location/{id}", ctx -> LocationController.getLocation(ctx, locationRepository))
+            .get("/type", ctx -> TypeController.getAll(ctx, typeRepository))
+            .get("/type/{id}", ctx -> TypeController.getType(ctx, typeRepository))
+            .get("/status", ctx -> StatusController.getAll(ctx, statusRepository))
+            .get("/status/{id}", ctx -> StatusController.getStatus(ctx, statusRepository))
+            .get("/docs", DocsController::makeDocs)
+            .start(7000);
+      } catch (IOException e) {
         logger.error("Failed to create repository instances", e);
       }
-    }catch (IOException e){
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
