@@ -1,0 +1,64 @@
+{
+  "user.users": {
+    "transaction": true,
+    "partition-key": [
+      "user_id"
+    ],
+    "columns": {
+      "user_id": "INT",
+      "name": "TEXT",
+      "location_id": "INT",
+      "document_limit": "INT",
+      "document_total": "INT"
+    }
+  },
+  "document.documents": {
+    "transaction": true,
+    "partition-key": [
+      "document_id"
+    ],
+    "secondary-index": [
+      "user_id",
+      "location_id"
+    ],
+    "columns": {
+      "document_id": "INT",
+      "name": "TEXT",
+      "author": "TEXT",
+      "user_id": "INT",
+      "type_id": "INT",
+      "status_id": "INT",
+      "location_id": "INT"
+    }
+  },
+  "document.type": {
+    "transaction": true,
+    "partition-key": [
+      "type_id"
+    ],
+    "columns": {
+      "type_id": "INT",
+      "name": "TEXT"
+    }
+  },
+  "document.status": {
+    "transaction": true,
+    "partition-key": [
+      "status_id"
+    ],
+    "columns": {
+      "status_id": "INT",
+      "name": "TEXT"
+    }
+  },
+  "document.location": {
+    "transaction": true,
+    "partition-key": [
+      "location_id"
+    ],
+    "columns": {
+      "location_id": "INT",
+      "name": "TEXT"
+    }
+  }
+}
