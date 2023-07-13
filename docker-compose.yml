@@ -2,13 +2,23 @@ version: "3.5"
 services:
   mysql:
     image: mysql
-    container_name: "mysql-1"
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-    ports:
-      - "3307:3306"
+    networks:
+      - scalibrary-net
   cassandra:
     image: cassandra
-    container_name: "cassandra-1"
+    networks:
+      - scalibrary-net
+  api:
+    build: api/.
     ports:
-      - "9042:9042"
+      -  "7000:7000"
+    networks:
+      - scalibrary-net
+    depends_on:
+      - mysql
+      - cassandra
+    
+networks:
+  scalibrary-net:

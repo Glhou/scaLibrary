@@ -1,0 +1,10 @@
+# Ignore vscode
+.vscode
+
+# Ignore Gradle project-specific cache directory
+.gradle
+scalardb-schema-loader*
+
+# Ignore Gradle build output directory
+build
+bin
