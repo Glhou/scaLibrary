@@ -46,6 +46,11 @@ public class AppMain {
         // Creating the server with javalin
         Javalin app = Javalin.create(config -> {
           config.plugins.enableDevLogging();
+          config.plugins.enableCors(cors -> {
+            cors.add(it -> {
+              it.allowHost("http://localhost:5173");
+            });
+          });
         })
             .get("/", ctx -> ctx.json("{\"status\": \"Server On\"}"))
             .get("/document", ctx -> DocumentController.getAll(ctx, documentRepository))
