@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Welcome to ScaLibrary</h1>
+<a href="registerUser">registerUser</a>
+<a href="registerDocument">registerDocument</a>
+<a href="rentDocument">rentDocument</a>
+<a href="returnDocument">returnDocument</a>
