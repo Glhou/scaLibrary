@@ -92,7 +92,7 @@
           alert("fail");
         }
       }   
-  
+
     </script>
 
     <main>
@@ -119,7 +119,7 @@
         <label>
           search word:
           <input type="text" bind:value={word}>
-          <button type="button">Search</button>
+          <button type="submit">Search</button>
         </label>
         <table id='dataTable' cellpadding="10">
           <thead>

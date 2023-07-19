@@ -16,9 +16,25 @@ services:
       -  "7000:7000"
     networks:
       - scalibrary-net
+      - scalibrary-api-net
     depends_on:
       - mysql
       - cassandra
+  web:
+    build: web/.
+    ports:
+      - "5173:80"
+    networks:
+      - scalibrary-api-net
+    depends_on:
+      - api
+    volumes:
+      - web:/app
+      - /app/node_modules
     
 networks:
   scalibrary-net:
+  scalibrary-api-net:
+
+volumes:
+  web:
