@@ -21,6 +21,8 @@
         if (response.ok) {
           alert("success");
         } else {
+          const status = await response.json()
+          alert(status.status);
           alert("fail");
         }
       }

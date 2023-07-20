@@ -23,7 +23,7 @@
             type_id,
             location_id
         };
-        alert(JSON.stringify(data));
+        // alert(JSON.stringify(data));
 
         const response = await fetch('http://localhost:7000/document', {
             method:'POST',
@@ -36,8 +36,8 @@
         if (response.ok) {
             alert("suucess");
         } else {
-            alert(response.statusText);
-            alert(response.json());
+            // alert(response.statusText);
+            // alert(response.json());
             alert("faild");
         }
     }
